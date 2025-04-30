@@ -8,7 +8,7 @@ void set_to_default(FILE* configure) {
     }
     fprintf(configure, "%s", "ENIGMA MACHINE CONFIGURATIONS\n\nROTORS' NUMBERS DISPLAYED AT THE TOP:\n\n");
     fprintf(configure, "%s %d\n%s %d\n%s %d\n\n", "1st ROTOR:", 10, "2nd ROTOR:", 10, "3rd ROTOR:", 10);
-    fprintf(configure, "%s", "(THE MODULE PROPORTION FOR ALL ROTORS IS 26)\n\nPLUGBOARD (THE PLUGBOARD IS EMPTY BY DEFAULT):");
+    fprintf(configure, "%s", "(THE MODULE PROPORTION FOR ALL ROTORS IS 26)\n\nPLUGBOARD:");
     fclose(configure);
     printf ("THE CONFIGURATIONS WERE RESTARTED SUCCESFULLY");
 }
