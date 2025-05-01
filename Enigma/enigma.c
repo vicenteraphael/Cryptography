@@ -1,31 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
-typedef struct rotor {
-    int top;
-    int module;
-    struct rotor* next;
-} Rotor;
-
-Rotor* create_rotor (int ptr) {
-    Rotor* rotor = malloc(sizeof(Rotor));
-    rotor->top = ptr;
-    rotor->module = 27;
-    return rotor;
-}
-
-int rotate(Rotor* rotor) {
-    rotor->top = (rotor->top + 1) % rotor->module;
-    if (rotor->top == 0) return ++rotor->top;
-    return 0;
-}
-
-int get_rotorNumber (FILE* configurations, char* buff) {
-    fscanf(configurations, "%s %s %s", buff, buff, buff);
-    fseek(configurations, 2, SEEK_CUR);
-    return atoi(buff);
-}
+#include "rotors.c"
 
 typedef struct plugboard {
     char* board;
@@ -37,6 +13,28 @@ Plugboard* create_plugboard () {
     return plugboard;
 }
 
+Rotor* rotorInitialize (FILE* configurations) {
+    int top, type; char* buff = malloc(sizeof(char)*10);
+    fscanf (configurations, "%s %s: %d", buff, buff, top);
+    FILE* rotors;
+    if ((rotors = fopen("rotors.txt", "r")) == NULL) {
+        printf ("Error opening the rotors file\n");
+        exit(1);
+    }
+    if (buff == "I") {
+        type = 1;
+    } else if (buff == "II") {
+        type = 2;
+    } else if (buff == "III") {
+        type = 3;
+    } else if (buff == "IV") {
+        type = 4;
+    } else {
+        type = 5;
+    }
+    return create_rotor(rotors, type, top);
+}
+
 void set_variables(Rotor** rotor1, Rotor** rotor2, Rotor** rotor3, Plugboard** plugboard) {
     FILE* configurations;
     if ((configurations = fopen("configure.txt", "r")) == NULL) {
@@ -46,9 +44,9 @@ void set_variables(Rotor** rotor1, Rotor** rotor2, Rotor** rotor3, Plugboard** p
     fseek(configurations, 72, SEEK_SET);
     char* buff = malloc(sizeof(char)*3);
 
-    *rotor1 = create_rotor(get_rotorNumber(configurations, buff));
-    *rotor2 = create_rotor(get_rotorNumber(configurations, buff));
-    *rotor3 = create_rotor(get_rotorNumber(configurations, buff));
+    *rotor1 = rotorInitialize(configurations);
+    *rotor2 = rotorInitialize(configurations);
+    *rotor3 = rotorInitialize(configurations);
     
     *plugboard = create_plugboard();
     
